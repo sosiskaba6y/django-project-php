@@ -3,13 +3,22 @@ body {
 }
 
 aside {
+
+    border-radius: 60px;
+    display: block;
     float: left;
     background: #181818;
     width: 23%;
     padding: 2.5%;
-    height: 100vh;
+
     color: #fff;
     border-right: 5px solid #4d4d4d;
+    border-bottom: 5px solid #4d4d4d;
+    transition: transform .3s ease;
+}
+
+aside:hover {
+        transform: scale(1.01)
 }
 
 aside img {
@@ -18,11 +27,13 @@ aside img {
 }
 
 aside .logo {
+    text-decoration: none;
     font-size: 35px;
     margin-left: 10px;
     font-weight: bold;
     position: relative;
     top: -10px;
+    color: #fff;
 }
 
 aside h3 {
@@ -30,16 +41,58 @@ aside h3 {
     font-size: 28px;
 }
 
+aside a {
+    text-decoration: none;
+}
+
 aside ul {list=style: none}
 aside ul li {
     color: #fff;
     display: block;
     margin-top: 20px;
-    transition: all .6s ease;
+    transition: transform .6s ease;
 }
 
 aside ul li:hover, aside ul a:hover {
-    color: #eb5959;
+    color: #7279D8;
     text-decoration: none;
-    transform: scale(1.1);
+    transform: scale(1.05);
+}
+
+aside wholelogo:hover {
+    transform: scale(1.02);
+    transition: transform .6s ease;
+}
+
+.home {
+    float: right;
+    color: #fff;
+    margin-top: 50px;
+    text-align: center;
+    width: 76%;
+    margin-left: calc(360px +(100vw - 360px - 1080px) / 2);
+}
+
+.home p {
+    text-align: left;
+    padding: 5px;
+}
+
+.home h2 {
+    margin-bottom: 30px;
+}
+
+.home li{
+        text-align: left;
+    padding: 5px;
+}
+
+
+footer {
+    color: #898989;
+    text-align: center;
+}
+
+footer p {
+    margin-top: 5px;
 }
