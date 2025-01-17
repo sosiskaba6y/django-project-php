@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}IT Профессия{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <h1>Название проекта</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Главная</a></li>
+            <!-- Другие ссылки будут добавлены позже -->
+        </ul>
+    </nav>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>ФИО студента, академическая группа</p>
+    </footer>
+</body>
+</html>

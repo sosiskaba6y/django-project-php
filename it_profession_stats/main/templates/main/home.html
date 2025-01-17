@@ -1,0 +1,9 @@
+{% extends "main/base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<h2>{{ profession.title }}</h2>
+<p>{{ profession.description }}</p>
+<img src="{{ profession.image.url }}" alt="{{ profession.title }}">
+{% endblock %}
