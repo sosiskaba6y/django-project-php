@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+
+{% block title %}Навыки{% endblock %}
+
+{% block content %}
+<h2>{{ content.title }}</h2>
+{% if content.image %}
+    <img src="{{ content.image.url }}" alt="{{ content.title }}" class="img-fluid">
+{% endif %}
+<div>
+    {{ content.table_content|safe }}
+</div>
+{% endblock %}

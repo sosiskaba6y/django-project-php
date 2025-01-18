@@ -3,7 +3,11 @@
 {% block title %}Общая статистика{% endblock %}
 
 {% block content %}
-    <div class="general">
-        <h2>Общая статистика</h2>
-    </div>
+<h2>{{ content.title }}</h2>
+{% if content.image %}
+    <img src="{{ content.image.url }}" alt="{{ content.title }}" class="img-fluid">
+{% endif %}
+<div>
+    {{ content.table_content|safe }}
+</div>
 {% endblock %}

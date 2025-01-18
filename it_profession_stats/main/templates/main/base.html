@@ -16,10 +16,10 @@
         <ul>
             <a href="{% url 'home' %}"><li>Главная</li></a>
             <a href="{% url 'generalinfo' %}"><li>Общая статистика</li></a>
-            <a href=""><li>Востребованность</li></a>
-            <a href=""><li>География</li></a>
-            <a href=""><li>Навыки</li></a>
-            <a href=""><li>Последние вакансии</li></a>
+            <a href="{% url 'demand' %}"><li>Востребованность</li></a>
+            <a href="{% url 'geography' %}"><li>География</li></a>
+            <a href="{% url 'skills' %}"><li>Навыки</li></a>
+            <a href="{% url 'latest_vacancies' %}"><li>Последние вакансии</li></a>
         </ul>
     </aside>
     <main>
