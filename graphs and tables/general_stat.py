@@ -1,28 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import requests
-from datetime import datetime
 
-# Функция для получения курса валют
-def get_currency_rate(currency: str, date: str) -> float:
-    url = f"http://www.cbr.ru/scripts/XML_daily.asp?date_req={date}"
-    response = requests.get(url)
-    response.encoding = 'windows-1251'
-    if response.status_code == 200:
-        from xml.etree import ElementTree as ET
-        tree = ET.fromstring(response.text)
-        for valute in tree.findall(".//Valute"):
-            char_code = valute.find("CharCode").text
-            if char_code == currency:
-                rate = float(valute.find("Value").text.replace(',', '.'))
-                nominal = int(valute.find("Nominal").text)
-                return rate / nominal
-    return 1.0 if currency == "RUR" else None
+# Путь к файлам
+vacancies_file = "vacancies_2024.csv"
+exchange_rates_file = "currency.csv"
 
 # Загрузка данных
-file_path = "vacancies_2024.csv"
-
-vacancies = pd.read_csv(file_path, dtype={
+vacancies = pd.read_csv(vacancies_file, dtype={
     "name": str,
     "key_skills": str,
     "salary_from": float,
@@ -31,45 +15,51 @@ vacancies = pd.read_csv(file_path, dtype={
     "area_name": str,
     "published_at": str
 })
+exchange_rates = pd.read_csv(exchange_rates_file)
 
-# Обработка пропусков
-vacancies["key_skills"] = vacancies["key_skills"].fillna("")
+# Приведение столбца published_at к формату datetime
+vacancies["published_at"] = pd.to_datetime(vacancies["published_at"], errors="coerce", utc=True)
 
+# Удаление строк с некорректной датой
+vacancies = vacancies.dropna(subset=["published_at"])
 
-# Предобработка данных
-vacancies = vacancies[vacancies["salary_from"].notnull() | vacancies["salary_to"].notnull()]
+# Приведение к формату даты без времени
+vacancies["published_date"] = vacancies["published_at"].dt.date
+exchange_rates["date"] = pd.to_datetime(exchange_rates["date"]).dt.date
 
-# Исключение некорректных зарплат
-vacancies = vacancies[(vacancies["salary_from"] <= 10_000_000) & (vacancies["salary_to"] <= 10_000_000)]
+# Присоединение курсов валют
+vacancies = vacancies.merge(exchange_rates, how="left", left_on="published_date", right_on="date")
 
-# Расчет средней зарплаты
-vacancies["salary_avg"] = vacancies[["salary_from", "salary_to"]].mean(axis=1)
+# Учитываем только вакансии с указанной зарплатой и исключаем некорректные данные
+vacancies = vacancies.dropna(subset=["salary_from", "salary_to"])
+vacancies = vacancies[vacancies["salary_from"] <= 10_000_000]
+vacancies = vacancies[vacancies["salary_to"] <= 10_000_000]
 
-# Конвертация зарплат в рубли
-converted_salaries = []
-for _, row in vacancies.iterrows():
-    date = datetime.strptime(row["published_at"].split("T")[0], "%Y-%m-%d").strftime("%d/%m/%Y")
-    rate = get_currency_rate(row["salary_currency"], date)
-    if rate:
-        converted_salaries.append(row["salary_avg"] * rate)
+# Удаление вакансий с отсутствующими курсами валют
+def get_salary_in_rub(row):
+    currency = row["salary_currency"]
+    if currency == "RUR":  # Если валюта уже в рублях, курс = 1
+        return (row["salary_from"] + row["salary_to"]) / 2
+    elif pd.notna(row.get(currency)):  # Проверяем, что курс валюты существует
+        return (row["salary_from"] + row["salary_to"]) / 2 * row[currency]
     else:
-        converted_salaries.append(None)
+        return None
 
-vacancies["salary_rub"] = converted_salaries
+vacancies["salary_rub"] = vacancies.apply(get_salary_in_rub, axis=1)
+vacancies = vacancies.dropna(subset=["salary_rub"])  # Удаляем строки с отсутствующими курсами валют
 
-# Группировка по годам и расчет среднего уровня зарплат
-vacancies["year"] = pd.to_datetime(vacancies["published_at"]).dt.year
-salary_trend = vacancies.groupby("year")["salary_rub"].mean().dropna()
+# Группировка по годам и расчет средней зарплаты
+vacancies["year"] = vacancies["published_at"].dt.year
+salary_trend = vacancies.groupby("year")["salary_rub"].mean().reset_index()
+
+print(salary_trend)
 
 # Построение графика
 plt.figure(figsize=(10, 6))
-plt.plot(salary_trend.index, salary_trend.values, marker='o', label="Средняя зарплата")
-plt.title("Динамика уровня зарплат по годам")
-plt.xlabel("Год")
-plt.ylabel("Средняя зарплата (в рублях)")
+plt.plot(salary_trend["year"], salary_trend["salary_rub"], marker="o", linestyle="-")
+plt.title("Динамика уровня зарплат по годам (в рублях)", fontsize=14)
+plt.xlabel("Год", fontsize=12)
+plt.ylabel("Средняя зарплата (руб.)", fontsize=12)
 plt.grid(True)
-plt.legend()
-
-# Сохранение графика
-plt.savefig("salary_trend.png")
+plt.savefig("output/Динамика зп по годам.png")
 plt.show()

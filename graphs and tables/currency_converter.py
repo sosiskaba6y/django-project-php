@@ -6,7 +6,7 @@ from datetime import datetime
 CURRENCIES = ['BYR', 'USD', 'EUR', 'KZT', 'UAH', 'AZN', 'KGS', 'UZS', 'GEL']
 
 start_date = '2003-01-01'
-end_date = '2024-11-01'
+end_date = '2024-12-03'
 date = datetime.strptime(start_date, '%Y-%m-%d')
 end = datetime.strptime(end_date, '%Y-%m-%d')
 data = []
