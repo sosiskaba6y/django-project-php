@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Путь к файлам
 vacancies_file = "vacancies_2024.csv"
@@ -56,18 +57,24 @@ salary_by_city = vacancies.groupby("area_name")["salary_rub"].mean().reset_index
 # Сортировка по средней зарплате в порядке убывания
 salary_by_city = salary_by_city.sort_values(by="salary_rub", ascending=False)
 
-print(salary_by_city)
+# Оставляем только топ N городов, остальные объединяем в "Другие"
+top_n = 20  # Количество городов для отображения
+top_cities = salary_by_city.head(top_n)
+other_cities_mean = salary_by_city["salary_rub"][top_n:].mean()
+other_cities = pd.DataFrame({"area_name": ["Другие"], "salary_rub": [other_cities_mean]})
+
+# Объединяем топ города и "Другие" города
+final_salary_data = pd.concat([top_cities, other_cities])
+
+print(final_salary_data)
 
 # Построение графика
-import matplotlib.pyplot as plt
-
 plt.figure(figsize=(12, 8))
-plt.bar(salary_by_city["area_name"], salary_by_city["salary_rub"], color='skyblue')
-plt.title("Уровень зарплат по городам (в порядке убывания)", fontsize=14)
-plt.xlabel("Город", fontsize=5)
-plt.ylabel("Средняя зарплата (руб.)", fontsize=12)
-plt.xticks(rotation=90)
-plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.barh(final_salary_data["area_name"], final_salary_data["salary_rub"], color='skyblue')
+plt.title(f"Уровень зарплат по городам для всех профессий (в порядке убывания), ТОП-{top_n} + Другие", fontsize=14)
+plt.xlabel("Средняя зарплата (руб.)", fontsize=12)
+plt.ylabel("Город", fontsize=12)
+plt.grid(axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
-plt.savefig("output/Уровень зарплат по городам3.png")
+plt.savefig("output/Уровень зарплат по городам для всех профессий_top10_and_others.png")
 plt.show()

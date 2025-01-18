@@ -118,10 +118,14 @@ th, td {
 }
 
 .content-block {
-    float: right;
     color: #fff;
     margin-top: 50px;
     text-align: center;
-    width: 76%;
     margin-left: calc(360px +(100vw - 360px - 1080px) / 2);
+}
+
+h1 {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    text-align: center;
 }
