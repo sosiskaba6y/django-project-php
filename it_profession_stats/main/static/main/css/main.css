@@ -100,6 +100,7 @@ footer {
 }
 
 table {
+    font-size: 10px;
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
@@ -107,6 +108,7 @@ table {
 }
 
 table, th, td {
+    font-size: 10px;
     border: 1px solid #fff;
 }
 
