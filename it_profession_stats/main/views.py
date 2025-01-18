@@ -1,26 +1,42 @@
 # main/views.py
 
 from django.shortcuts import render
-from stats.models import PageContent
+from stats.models import PageContent, PageCategory
 
 def home(request):
     return render(request, 'main/home.html')
 
 def generalinfo(request):
-    content = PageContent.objects.filter(title='Общая статистика').first()
-    return render(request, 'main/generalinfo.html', {'content': content})
+    try:
+        category = PageCategory.objects.get(name='Общая статистика')
+        contents = PageContent.objects.filter(category=category)
+    except PageCategory.DoesNotExist:
+        contents = []
+    return render(request, 'main/generalinfo.html', {'contents': contents})
 
 def demand(request):
-    content = PageContent.objects.filter(title='Востребованность').first()
-    return render(request, 'main/demand.html', {'content': content})
+    try:
+        category = PageCategory.objects.get(name='Востребованность')
+        contents = PageContent.objects.filter(category=category)
+    except PageCategory.DoesNotExist:
+        contents = []
+    return render(request, 'main/demand.html', {'contents': contents})
 
 def geography(request):
-    content = PageContent.objects.filter(title='География').first()
-    return render(request, 'main/geography.html', {'content': content})
+    try:
+        category = PageCategory.objects.get(name='География')
+        contents = PageContent.objects.filter(category=category)
+    except PageCategory.DoesNotExist:
+        contents = []
+    return render(request, 'main/geography.html', {'contents': contents})
 
 def skills(request):
-    content = PageContent.objects.filter(title='Навыки').first()
-    return render(request, 'main/skills.html', {'content': content})
+    try:
+        category = PageCategory.objects.get(name='Навыки')
+        contents = PageContent.objects.filter(category=category)
+    except PageCategory.DoesNotExist:
+        contents = []
+    return render(request, 'main/skills.html', {'contents': contents})
 
 def latest_vacancies(request):
     # Пока что ничего не делаем для этой страницы

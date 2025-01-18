@@ -94,10 +94,6 @@ footer {
     text-align: center;
 }
 
-footer p {
-    margin-top: 5px;
-}
-
 .img-fluid {
     max-width: 100%;
     height: auto;
@@ -107,13 +103,23 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 table, th, td {
-    border: 1px solid black;
+    border: 1px solid #fff;
 }
 
 th, td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
+}
+
+.content-block {
+    float: right;
+    color: #fff;
+    margin-top: 50px;
+    text-align: center;
+    width: 76%;
+    margin-left: calc(360px +(100vw - 360px - 1080px) / 2);
 }

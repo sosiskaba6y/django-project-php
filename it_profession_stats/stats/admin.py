@@ -1,9 +1,15 @@
 from django.contrib import admin
-from .models import PageContent
+from .models import PageCategory, PageContent
+
+@admin.register(PageCategory)
+class PageCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
 @admin.register(PageContent)
 class PageContentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'image_tag')  # Добавим отображение изображения в админке
+    list_display = ('title', 'category', 'image_tag')
+    search_fields = ['title']
+    list_filter = ['category']
 
     def image_tag(self, obj):
         if obj.image:

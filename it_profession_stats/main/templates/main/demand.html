@@ -3,11 +3,18 @@
 {% block title %}Востребованность{% endblock %}
 
 {% block content %}
-<h2>{{ content.title }}</h2>
-{% if content.image %}
-    <img src="{{ content.image.url }}" alt="{{ content.title }}" class="img-fluid">
-{% endif %}
-<div>
-    {{ content.table_content|safe }}
-</div>
+<h1>Востребованность</h1>
+{% for content in contents %}
+    <div class="content-block">
+        <h3>{{ content.title }}</h3>
+        {% if content.image %}
+            <img src="{{ content.image.url }}" alt="{{ content.title }}" class="img-fluid">
+        {% endif %}
+        <div>
+            {{ content.table_content|safe }}
+        </div>
+    </div>
+{% empty %}
+    <p>На данной странице пока нет данных.</p>
+{% endfor %}
 {% endblock %}
