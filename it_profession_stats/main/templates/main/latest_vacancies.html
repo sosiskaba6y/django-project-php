@@ -3,6 +3,30 @@
 {% block title %}Последние вакансии{% endblock %}
 
 {% block content %}
-<h2>Последние вакансии</h2>
-<!-- Здесь будет код для вывода актуальных вакансий -->
+<div class="container">
+    <h1 class="text-center mb-4">Последние вакансии</h1>
+    {% if error %}
+        <p class="text-center">{{ error }}</p>
+    {% elif vacancies %}
+        <div class="row">
+            {% for vacancy in vacancies %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ vacancy.name }}</h2>
+                            <p class="card-text"><strong>Описание:</strong> {{ vacancy.description|safe }}</p>
+                            <p class="card-text"><strong>Навыки:</strong> {{ vacancy.key_skills }}</p>
+                            <p class="card-text"><strong>Компания:</strong> {{ vacancy.company }}</p>
+                            <p class="card-text"><strong>Оклад:</strong> {{ vacancy.salary_str }}</p>
+                            <p class="card-text"><strong>Регион:</strong> {{ vacancy.region }}</p>
+                            <p class="card-text"><strong>Дата публикации:</strong> {{ vacancy.published_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">На данный момент нет доступных вакансий.</p>
+    {% endif %}
+</div>
 {% endblock %}
